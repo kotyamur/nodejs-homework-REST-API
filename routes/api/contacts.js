@@ -1,5 +1,12 @@
 const express = require("express");
-const { listContacts, getContactById } = require("../../models/contacts");
+const { httpError } = require("../../helpers");
+const {
+  listContacts,
+  getContactById,
+  addContact,
+  removeContact,
+  updateContact,
+} = require("../../models/contacts");
 
 const router = express.Router();
 
@@ -9,22 +16,51 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/:contactId", async (req, res, next) => {
-  console.log(req.params);
   const { contactId } = req.params;
   const contactById = await getContactById(contactId);
-  res.status(200).json(contactById);
+  if (contactById.length === 0) {
+    return next(httpError(404, "Not found"));
+  }
+  return res.status(200).json(contactById);
 });
 
 router.post("/", async (req, res, next) => {
-  res.json({ message: "template message" });
+  const { name, email, phone } = req.body;
+  if (!name || !email || !phone) {
+    return next(httpError(400, "missing required name field"));
+  }
+  const newContact = await addContact({ name, email, phone });
+  res.status(201).json(newContact);
 });
 
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  const { contactId } = req.params;
+  const contactById = await getContactById(contactId);
+  if (contactById.length === 0) {
+    return next(httpError(404, "Not found"));
+  }
+  await removeContact(contactId);
+  return res.status(200).json({ message: "contact deleted" });
 });
 
 router.put("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  const { name, email, phone } = req.body;
+  console.log(req.body);
+  if (!name || !email || !phone) {
+    console.log(!name || !email || !phone);
+    return next(httpError(400, "missing fields"));
+  }
+  const { contactId } = req.params;
+  const contactById = await getContactById(contactId);
+  if (contactById.length === 0) {
+    return next(httpError(404, "Not found"));
+  }
+  const updatedContact = await updateContact(contactId, {
+    name,
+    email,
+    phone,
+  });
+  return res.status(200).json(updatedContact);
 });
 
 module.exports = router;
