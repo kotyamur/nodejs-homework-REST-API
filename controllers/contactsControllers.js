@@ -42,7 +42,6 @@ const deleteContactController = async (req, res, next) => {
 
 const updateContactController = async (req, res, next) => {
   const { name, email, phone } = req.body;
-  console.log(req.body);
   if (!name || !email || !phone) {
     console.log(!name || !email || !phone);
     return next(httpError(400, "missing fields"));
