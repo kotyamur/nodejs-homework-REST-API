@@ -13,50 +13,66 @@ const getListContactsController = async (req, res, next) => {
 };
 
 const getContactByIdController = async (req, res, next) => {
-  const { contactId } = req.params;
-  const contactById = await getContactById(contactId);
-  if (contactById.length === 0) {
-    return next(httpError(404, "Not found"));
+  try {
+    const { contactId } = req.params;
+    const contactById = await getContactById(contactId);
+    if (contactById.length === 0) {
+      return next(httpError(404, "Not found"));
+    }
+    return res.status(200).json(contactById);
+  } catch (error) {
+    next(error);
   }
-  return res.status(200).json(contactById);
 };
 
 const createNewContactController = async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  if (!name || !email || !phone) {
-    return next(httpError(400, "missing required name field"));
+  try {
+    const { name, email, phone } = req.body;
+    if (!name || !email || !phone) {
+      return next(httpError(400, "missing required name field"));
+    }
+    const newContact = await addContact({ name, email, phone });
+    res.status(201).json(newContact);
+  } catch (error) {
+    next(error);
   }
-  const newContact = await addContact({ name, email, phone });
-  res.status(201).json(newContact);
 };
 
 const deleteContactController = async (req, res, next) => {
-  const { contactId } = req.params;
-  const contactById = await getContactById(contactId);
-  if (contactById.length === 0) {
-    return next(httpError(404, "Not found"));
+  try {
+    const { contactId } = req.params;
+    const contactById = await getContactById(contactId);
+    if (contactById.length === 0) {
+      return next(httpError(404, "Not found"));
+    }
+    await removeContact(contactId);
+    return res.status(200).json({ message: "contact deleted" });
+  } catch (error) {
+    next(error);
   }
-  await removeContact(contactId);
-  return res.status(200).json({ message: "contact deleted" });
 };
 
 const updateContactController = async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  if (!name || !email || !phone) {
-    console.log(!name || !email || !phone);
-    return next(httpError(400, "missing fields"));
+  try {
+    const { name, email, phone } = req.body;
+    if (!name || !email || !phone) {
+      console.log(!name || !email || !phone);
+      return next(httpError(400, "missing fields"));
+    }
+    const { contactId } = req.params;
+    const contactById = await getContactById(contactId);
+    if (contactById.length === 0) {
+      return next(httpError(404, "Not found"));
+    }
+    const updatedContact = await updateContact(contactId, {
+      name,
+      email,
+      phone,
+    });
+    return res.status(200).json(updatedContact);
+  } catch (error) {
+    next(error);
   }
-  const { contactId } = req.params;
-  const contactById = await getContactById(contactId);
-  if (contactById.length === 0) {
-    return next(httpError(404, "Not found"));
-  }
-  const updatedContact = await updateContact(contactId, {
-    name,
-    email,
-    phone,
-  });
-  return res.status(200).json(updatedContact);
 };
 
 module.exports = {
