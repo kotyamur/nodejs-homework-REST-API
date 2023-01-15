@@ -5,10 +5,12 @@ const {
   deleteContactController,
   createNewContactController,
   updateContactController,
+  updateStatusContactController,
 } = require("../../controllers/contactsControllers");
 const { validateRequestBody } = require("../../middlewares");
 const {
   createAndUpdateContactSchema,
+  updateStatusContactSchema,
 } = require("../../schemas/contactsSchema");
 
 const router = express.Router();
@@ -29,6 +31,11 @@ router.put(
   "/:contactId",
   validateRequestBody(createAndUpdateContactSchema),
   updateContactController
+);
+router.patch(
+  "/:contactId/favorite",
+  validateRequestBody(updateStatusContactSchema),
+  updateStatusContactController
 );
 
 module.exports = router;
