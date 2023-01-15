@@ -30,6 +30,16 @@ const createNewContactController = async (req, res, next) => {
     if (!name || !email || !phone) {
       return next(httpError(400, "missing required name field"));
     }
+    if (!req.body.favorite) {
+      const newContact = await Contact.create({
+        name,
+        email,
+        phone,
+        favorite: false,
+      });
+      return res.status(201).json(newContact);
+    }
+
     const newContact = await Contact.create({ name, email, phone });
     res.status(201).json(newContact);
   } catch (error) {
@@ -55,7 +65,6 @@ const updateContactController = async (req, res, next) => {
   try {
     const { name, email, phone } = req.body;
     if (!name || !email || !phone) {
-      console.log(!name || !email || !phone);
       return next(httpError(400, "missing fields"));
     }
     const { contactId } = req.params;
