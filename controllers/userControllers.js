@@ -78,8 +78,29 @@ const logout = async (req, res, next) => {
   }
 };
 
+const current = async (req, res, next) => {
+  try {
+    console.log(req.user);
+    const { user } = req;
+
+    if (!user) {
+      return next(httpError(401, "Not authorized"));
+    }
+    const { email, subscription } = user;
+    res.status(200).json({
+      user: {
+        email,
+        subscription,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   login,
   logout,
+  current,
 };
