@@ -8,7 +8,6 @@ const { JWT_SECRET } = process.env;
 const signup = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(req.body);
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     const savedUser = await User.create({
@@ -37,20 +36,21 @@ const login = async (req, res, next) => {
     const storedUser = await User.findOne({
       email,
     });
-    console.log(storedUser);
 
     if (!storedUser) {
-      return next(httpError(401, "email is not valid"));
+      return next(httpError(401, "Email or password is wrong"));
     }
 
     const isPasswordValid = await bcrypt.compare(password, storedUser.password);
 
     if (!isPasswordValid) {
-      return next(httpError(401, "password is not valid"));
+      return next(httpError(401, "Email or password is wrong"));
     }
 
     const payload = { id: storedUser._id };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+
+    await User.findByIdAndUpdate(storedUser._id, { token });
 
     return res.json({
       token,
@@ -66,9 +66,13 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.status(201).json({
-      user: "logout",
-    });
+    const id = req.user._id;
+    const user = await User.findById(id);
+    if (!user) {
+      return next(httpError(401, "Not authorized"));
+    }
+    await User.findByIdAndUpdate(id, { token: null });
+    res.status(204);
   } catch (error) {
     next(error);
   }

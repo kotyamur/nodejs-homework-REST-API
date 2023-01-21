@@ -18,13 +18,11 @@ const validateRequestBody = (schema) => {
 const auth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || "";
-    console.log(authHeader);
     const [type, token] = authHeader.split(" ");
 
     if (type !== "Bearer" || !token) {
       return next(httpError(401, "Not authorized"));
     }
-    console.log(jwt.verify(token, JWT_SECRET));
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(id);
 
@@ -32,7 +30,8 @@ const auth = async (req, res, next) => {
   } catch (error) {
     if (
       error.name === "TokenExpiredError" ||
-      error.name === "JsonWebTokenError"
+      error.name === "JsonWebTokenError" ||
+      error.message.includes("Unexpected token")
     ) {
       return next(httpError(401, "Not authorized"));
     }
