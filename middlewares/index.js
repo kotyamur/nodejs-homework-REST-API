@@ -27,7 +27,6 @@ const checkBodyRequest = (req, res, next) => {
 const checkChangeFavoriteRequest = (req, res, next) => {
   const { favorite } = req.body;
   if (!favorite) {
-    console.log(!favorite);
     return next(httpError(400, "missing field favorite"));
   }
 
@@ -54,10 +53,10 @@ const auth = async (req, res, next) => {
     ) {
       return next(httpError(401, "Not authorized"));
     }
-    next(error);
+    return next(error);
   }
 
-  next();
+  return next();
 };
 
 module.exports = {

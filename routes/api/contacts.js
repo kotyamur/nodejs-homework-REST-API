@@ -6,7 +6,7 @@ const {
   createNewContactController,
   updateContactController,
   updateStatusContactController,
-} = require("../../controllers/contactsControllers");
+} = require("../../controllers");
 const {
   validateRequestBody,
   checkBodyRequest,
