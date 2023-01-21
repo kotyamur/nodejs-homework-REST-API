@@ -8,7 +8,7 @@ const userValidateSchema = Joi.object({
     })
     .min(4)
     .required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,12}$")).required(),
+  password: Joi.string().pattern("^[a-zA-Z0-9]{3,12}$").required(),
   subscription: Joi.string().optional(),
 });
 
