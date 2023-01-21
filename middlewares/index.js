@@ -15,6 +15,25 @@ const validateRequestBody = (schema) => {
   };
 };
 
+const checkBodyRequest = (req, res, next) => {
+  const { name, email, phone } = req.body;
+  if (!name || !email || !phone) {
+    return next(httpError(400, "missing fields"));
+  }
+
+  return next();
+};
+
+const checkChangeFavoriteRequest = (req, res, next) => {
+  const { favorite } = req.body;
+  if (!favorite) {
+    console.log(!favorite);
+    return next(httpError(400, "missing field favorite"));
+  }
+
+  return next();
+};
+
 const auth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || "";
@@ -43,5 +62,7 @@ const auth = async (req, res, next) => {
 
 module.exports = {
   validateRequestBody,
+  checkBodyRequest,
+  checkChangeFavoriteRequest,
   auth,
 };

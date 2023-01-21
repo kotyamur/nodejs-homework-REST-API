@@ -7,7 +7,11 @@ const {
   updateContactController,
   updateStatusContactController,
 } = require("../../controllers/contactsControllers");
-const { validateRequestBody } = require("../../middlewares");
+const {
+  validateRequestBody,
+  checkBodyRequest,
+  checkChangeFavoriteRequest,
+} = require("../../middlewares");
 const {
   createAndUpdateContactSchema,
   updateStatusContactSchema,
@@ -29,11 +33,13 @@ router.delete("/:contactId", deleteContactController);
 
 router.put(
   "/:contactId",
+  checkBodyRequest,
   validateRequestBody(createAndUpdateContactSchema),
   updateContactController
 );
 router.patch(
   "/:contactId/favorite",
+  checkChangeFavoriteRequest,
   validateRequestBody(updateStatusContactSchema),
   updateStatusContactController
 );
