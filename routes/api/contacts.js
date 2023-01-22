@@ -6,8 +6,13 @@ const {
   createNewContactController,
   updateContactController,
   updateStatusContactController,
-} = require("../../controllers/contactsControllers");
-const { validateRequestBody } = require("../../middlewares");
+} = require("../../controllers");
+const {
+  validateRequestBody,
+  checkBodyRequest,
+  checkChangeFavoriteRequest,
+  auth,
+} = require("../../middlewares");
 const {
   createAndUpdateContactSchema,
   updateStatusContactSchema,
@@ -15,25 +20,30 @@ const {
 
 const router = express.Router();
 
-router.get("/", getListContactsController);
+router.get("/", auth, getListContactsController);
 
-router.get("/:contactId", getContactByIdController);
+router.get("/:contactId", auth, getContactByIdController);
 
 router.post(
   "/",
+  auth,
   validateRequestBody(createAndUpdateContactSchema),
   createNewContactController
 );
 
-router.delete("/:contactId", deleteContactController);
+router.delete("/:contactId", auth, deleteContactController);
 
 router.put(
   "/:contactId",
+  auth,
+  checkBodyRequest,
   validateRequestBody(createAndUpdateContactSchema),
   updateContactController
 );
 router.patch(
   "/:contactId/favorite",
+  auth,
+  checkChangeFavoriteRequest,
   validateRequestBody(updateStatusContactSchema),
   updateStatusContactController
 );
