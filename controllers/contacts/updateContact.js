@@ -9,7 +9,6 @@ const updateContactController = async (req, res, next) => {
     if (!contactById) {
       return next(httpError(404, "Not found"));
     }
-
     const updatedContact = await Contact.findByIdAndUpdate(
       contactId,
       {
