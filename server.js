@@ -9,7 +9,6 @@ const { HOST_URI } = process.env;
 
 async function main() {
   try {
-    console.log(process.env.HOST_URI);
     await mongoose.connect(HOST_URI);
     console.log("Database connection successful");
 
