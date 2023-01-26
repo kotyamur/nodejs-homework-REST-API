@@ -1,6 +1,8 @@
 const { httpError } = require("../helpers");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/users");
+const multer = require("multer");
+const path = require("path");
 
 const { JWT_SECRET } = process.env;
 
@@ -44,6 +46,10 @@ const auth = async (req, res, next) => {
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(id);
 
+    if (!user) {
+      return next(httpError(401, "Not authorized"));
+    }
+
     req.user = user;
   } catch (error) {
     if (
@@ -79,10 +85,29 @@ const checkChangeSubscriptionRequest = (req, res, next) => {
   return next();
 };
 
+const uploadDir = path.join(__dirname, "../", "tmp");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+  limits: {
+    fileSize: 1048576,
+  },
+});
+
+const upload = multer({
+  storage: storage,
+});
+
 module.exports = {
   validateRequestBody,
   checkBodyRequest,
   checkChangeFavoriteRequest,
   auth,
   checkChangeSubscriptionRequest,
+  upload,
 };
