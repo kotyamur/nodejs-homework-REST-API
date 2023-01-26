@@ -1,14 +1,22 @@
 const { User } = require("../../models/users");
-const { httpError } = require("../../helpers");
 const path = require("path");
 const fs = require("fs").promises;
 const storeImage = path.join(__dirname, "../../", "public", "avatars");
-
+const Jimp = require("jimp");
 
 const updateUserAvatar = async (req, res, next) => {
   try {
     console.log(process.cwd());
     const { path: temporaryName, originalname } = req.file;
+    
+    try {
+        const img = await Jimp.read(temporaryName);
+        await img.resize(250, 250);
+        await img.writeAsync(temporaryName);
+    } catch (err) {
+      return next(err);
+    }  
+   
     const id = req.user._id;
     const imageNewName = `${id}_${originalname}`
       
