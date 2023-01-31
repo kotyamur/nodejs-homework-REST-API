@@ -13,6 +13,7 @@ const {
   current,
   updateSubscription,
   updateUserAvatar,
+  verifyEmail,
 } = require("./user");
 
 module.exports = {
@@ -28,4 +29,5 @@ module.exports = {
   updateContactController,
   updateStatusContactController,
   updateUserAvatar,
+  verifyEmail,
 };

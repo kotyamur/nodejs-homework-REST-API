@@ -1,9 +1,7 @@
-const httpError = (status, message) => {
-  const error = new Error(message);
-  error.status = status;
-  return error;
-};
+const { httpError } = require("./httpError");
+const sendEmail = require("./sendEmail");
 
 module.exports = {
   httpError,
+  sendEmail,
 };
