@@ -9,13 +9,13 @@ const verifyEmail = async (req, res, next) => {
       return next(httpError(404, "User not found"));
     }
   
-  await User.findByIdAndUpdate(user._id, {
-    verify: true,
-    verificationToken: null,
-  });
-  return res.status(200).json({
-    message: "Verification successful",
-  });
+    await User.findByIdAndUpdate(user._id, {
+      verify: true,
+      verificationToken: null,
+    });
+    return res.status(200).json({
+      message: "Verification successful",
+    });
   } catch (error) {
     next(error);
   }
