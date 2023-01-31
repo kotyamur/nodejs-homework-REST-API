@@ -14,6 +14,7 @@ const {
   updateSubscription,
   updateUserAvatar,
   verifyEmail,
+  resendVerifyEmail,
 } = require("./user");
 
 module.exports = {
@@ -30,4 +31,5 @@ module.exports = {
   updateStatusContactController,
   updateUserAvatar,
   verifyEmail,
+  resendVerifyEmail,
 };

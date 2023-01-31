@@ -8,7 +8,6 @@ const verifyEmail = async (req, res, next) => {
         if (!user) {
           return next(httpError(404, "User not found"));
         }
-    const id = req.user._id;
     
     await User.findByIdAndUpdate(user._id, {
       verify: true,
@@ -17,9 +16,9 @@ const verifyEmail = async (req, res, next) => {
     return res.status(200).json({
       message: "Verification successful",
     });
-  } catch (error) {
-    next(error);
-  }
+    } catch (error) {
+        next(error);
+    }
 };
 
 module.exports = verifyEmail;
