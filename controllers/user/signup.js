@@ -1,8 +1,9 @@
 const { User } = require("../../models/users");
-const { httpError, sendEmail } = require("../../helpers");
+const { httpError } = require("../../helpers");
 const gravatar = require("gravatar");
 const bcrypt = require("bcrypt");
 const { nanoid } = require("nanoid");
+const { sendEmail } = require("../../services/email");
 
 const signup = async (req, res, next) => {
   try {
