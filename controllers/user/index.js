@@ -4,6 +4,8 @@ const { logout } = require("./logout");
 const { current } = require("./current");
 const { updateSubscription } = require("./updateSubscription");
 const { updateUserAvatar } = require("./updateUserAvatar");
+const verifyEmail = require("./verifyEmail");
+const resendVerifyEmail = require("./resendVerifyEmail");
 
 module.exports = {
   signup,
@@ -12,4 +14,6 @@ module.exports = {
   current,
   updateSubscription,
   updateUserAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 };
